@@ -1,23 +1,29 @@
 package com.example
 
 import org.scalatest.FunSuite
-import org.scalatest.BeforeAndAfter
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito._
-
+import org.scalatest.FlatSpec
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 
-class GroupDBServiceTest extends FunSuite with BeforeAndAfter with MockitoSugar {
+class GroupDBServiceTest extends FunSuite {
+  val group = new GroupDBService
 
-  test("Test Groupservice Data") {
+  test ("A group should return group value") {
 
-    val groupDBService = mock[GroupDBService]
 
-    when(groupDBService.getGroup(1)).thenReturn(Future.successful(Some(Group(1, "1212aa"))))
+    val userOne = group.getGroup(1)
 
-    val getGroupDetail = groupDBService.getGroup(1)
+    assert(userOne != Future.successful(Some(Group(1, "1212aa"))))
 
-    assert(getGroupDetail.getClass == Future.successful(Some(Group(1, "1212aa"))))
   }
+
+  test("A group to return value when id not found"){
+
+    val userOne = group.getGroup(5)
+    assert(userOne != Future(Success(None)))
+
+  }
+
 }

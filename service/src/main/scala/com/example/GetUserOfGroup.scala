@@ -6,22 +6,27 @@ import scala.util.{Success, Failure}
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 
-
 class GetUserOfGroup {
-
   val userObj = new UserDBService
 
-  val ListUsers:ListBuffer[User] = ListBuffer.empty[User]
+  def getUserFromGroups(id: Int,
+                        listOfUsers: List[User] = userObj.mockedUserList,
+                        listOfSameGroupUsers: List[User]): List[User] = {
+    require(listOfUsers.nonEmpty, "list must not be empty")
+    val head = listOfUsers.head
+    val tail = listOfUsers.tail
 
-  def getUserFromGroups(id:Int):Future[ListBuffer[User]] = Future{
-
-    userObj.mockedUserList foreach(value =>
-      if(value.groupId.equals(id)){
-            ListUsers.append(value)
-        }
-      )
-    ListUsers
+    if (tail.isEmpty)
+      listOfSameGroupUsers
+    else {
+      if (head.groupId.equals(id))
+        getUserFromGroups(id, tail, listOfSameGroupUsers.::(head))
+      else
+        getUserFromGroups(id, tail, listOfSameGroupUsers)
+    }
   }
 
+  def getUsersGroup(groupId: Int): Future[List[User]] = Future {
+    userObj.mockedUserList.filter(_.groupId == groupId)
+  }
 }
-
