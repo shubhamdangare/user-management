@@ -14,21 +14,14 @@ class GetUserFromPermission {
 
 
 
-  def getUserFromPermission(permission:String):ListBuffer[User] = {
+  def getUserFromPermission(givenPermission:String):Future[ListBuffer[User]] = Future{
 
-      userObj.getUsers foreach( _ => {
-        getUserPermission(permission)onComplete{
-          case Success(value) => value match {
-            case Some(v) => ListUsers += v
-          }
-          case Failure(exception) => println("Could not process file")
-        }
-      })
+    userObj.mockedUserList foreach(value =>
+      if(value.permission.equals(givenPermission)){
+        ListUsers.append(value)
+      }
+      )
     ListUsers
-  }
-
-  def getUserPermission(permissionToCheck: String): Future[Option[User]] = Future {
-        userObj.mockedUserList.find(_.permission.equals(permissionToCheck))
   }
 
 }
