@@ -9,6 +9,7 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
 
   "A User" should {
     "Return value for getUser" in {
+
       whenReady(userObj.getUser(1)) {
         result => result.get shouldEqual User(1, "asdasd1", "asdasd1", 1, "abc")
       }

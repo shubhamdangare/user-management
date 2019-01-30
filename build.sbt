@@ -35,11 +35,13 @@ lazy val dependencies = new {
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5" % "test"
   val scalaMockito = "org.mockito" % "mockito-all" % "1.8.4"
+  val mysql = "mysql" % "mysql-connector-java" % "5.1.12"
 
 }
 
 
  lazy val commonDependencies = Seq(
    dependencies.scalaTest,
-   dependencies.scalaMockito
+   dependencies.scalaMockito,
+   dependencies.mysql
  )
