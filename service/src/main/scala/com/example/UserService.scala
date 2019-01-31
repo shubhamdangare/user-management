@@ -1,9 +1,6 @@
 
 package com.example
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 class UserService(userObj:UserDBService) {
 
   /** def getUserFromGroups(id: Int,
@@ -25,14 +22,9 @@ class UserService(userObj:UserDBService) {
     */
 
 
-  def getGroupUsersFromActualDB(groupId:String):List[User] = {
+  def getGroupUsersFromActualDB(groupId:String):Option[List[User]] = {
 
-    userObj.getUsersFromActualDB.get.filter(_.groupId.equals(groupId))
+    Option(userObj.getUsersFromActualDB.get.filter(_.groupId.equals(groupId)))
   }
 
-
-  def getGroupUsers(groupId: Int): Future[List[User]] = Future {
-
-    userObj.mockedUserList.filter(_.groupId == groupId)
-  }
 }

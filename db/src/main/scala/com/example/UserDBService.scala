@@ -1,40 +1,15 @@
 
 package com.example
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 import scalikejdbc._
 
 
 class UserDBService {
-  val Db = new DBConnection
 
-  val mockedUserList: List[User] = List(
-    User(1, "asdasd1", "asdasd1", "1", "abc"),
-    User(2, "asdasd2", "asdasd2", "1", "abc"),
-    User(3, "asdasd3", "asdasd3", "4", "pqr"),
-    User(4, "asdasd4", "asdasd4", "2", "pqr"))
+  val dBConnection = new DBConnection
 
-
-  def insertIntoUsers(ids: Int, name: String, password: String, groupId: String, permission: String): Future[Long] = Future {
-
-    implicit val session = AutoSession
-    Db.createConnectiontoDB()
-    sql"""insert into User values (${ids}, ${name}, ${password},${groupId},${permission})"""
-      .updateAndReturnGeneratedKey.apply()
-  }
-
-  def insert: Future[Future[Long]] = {
-
-    Future.successful(insertIntoUsers(1, "asdasd1", "asdasd1", "1", "abc"))
-    Future.successful(insertIntoUsers(2, "asdasd2", "asdasd2", "1", "abc"))
-    Future.successful(insertIntoUsers(3, "asdasd3", "asdasd3", "4", "pqr"))
-    Future.successful(insertIntoUsers(4, "asdasd4", "asdasd4", "2", "pqr"))
-  }
-
-  def getUserFromActualDB(ids: Int):Future[Option[User]] =Future {
-
-    Db.createConnectiontoDB()
+  def getUserFromActualDB(ids: Int): Option[User] = {
+    dBConnection.createConnectiontoDB()
     val user: Option[User] = DB readOnly { implicit session =>
       sql"select * from User where ids = ${ids}".map(rs => User(rs.int("ids"),
         rs.string("name"),
@@ -46,9 +21,8 @@ class UserDBService {
     user
   }
 
-  def getUsersFromActualDB:Option[List[User]] ={
-
-    Db.createConnectiontoDB()
+  def getUsersFromActualDB: Option[List[User]] = {
+    dBConnection.createConnectiontoDB()
     val users: List[User] = DB readOnly { implicit session =>
       sql"select * from User".map(rs => User(rs.int("ids"),
         rs.string("name"),
@@ -60,25 +34,15 @@ class UserDBService {
     Option(users)
   }
 
-  def updatedUserDB(ids: Int, permission: String): Future[Long] =Future {
-
-    Db.createConnectiontoDB()
+  def updatedUserDB(ids: Int, permission: String): Long = {
+    dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
     sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
   }
 
   def deleteFromUserDB(ids: Int): Long = {
-
-    Db.createConnectiontoDB()
+    dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
     sql"delete from User where ids = ${ids}".update.apply()
-  }
-
-  def getUser(id: Int): Future[Option[User]] = Future {
-    mockedUserList.find(_.ids.equals(id))
-  }
-
-  def getUsers: Future[List[User]] = Future {
-    mockedUserList
   }
 }

@@ -14,9 +14,8 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
   "A User" should {
     "Return value for getUser" in {
 
-      whenReady(userObj.getUserFromActualDB(1)) {
-        result => result.get shouldEqual User(1, "asdasd1", "asdasd1", "1", "root")
-      }
+      val result = userObj.getUserFromActualDB(1)
+         assert(result.get == User(1, "asdasd1", "asdasd1", "1", "root"))
     }
 
     "Not Return Empty List of Users" in {
@@ -37,10 +36,8 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
     }
 
     "update user in database " in {
-      whenReady(userObj.updatedUserDB(3,"Super")) {
-        result => assert(result === 1)
-      }
-
+     val result = userObj.updatedUserDB(3,"Super")
+         assert(result === 1)
     }
   }
 }

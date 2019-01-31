@@ -22,14 +22,9 @@ class UserPermissionService {
     */
 
 
-
   def getUsersFromPermissionFromActualDB(givenPermission:String):List[User] = {
 
     userObj.getUsersFromActualDB.get.filter(_.permission.equals(givenPermission))
   }
 
-
-  def getUsersFromPermission(givenPermission: String): Future[List[User]] = Future {
-    userObj.mockedUserList.filter(_.permission == givenPermission)
-  }
 }

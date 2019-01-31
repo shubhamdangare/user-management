@@ -1,5 +1,4 @@
+
 package com.example
 
-class User {
-
-}
+case class User(ids:Int ,name:String, password:String, groupId:String, permission:String )

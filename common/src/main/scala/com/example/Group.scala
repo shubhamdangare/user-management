@@ -1,5 +1,4 @@
+
 package com.example
 
-class Group {
-
-}
+case class Group(ids: Int, name: String)

@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val service = (project in file("service"))
-  .dependsOn(db)
+  .dependsOn(db,common)
   .settings(
     name := "Service",
     libraryDependencies ++= commonDependencies
@@ -26,6 +26,8 @@ lazy val common = (project in file("common"))
   )
 
 lazy val db = (project in file("db"))
+  .aggregate(common)
+  .dependsOn(common)
   .settings(
     name := "DB",
     libraryDependencies ++= commonDependencies
