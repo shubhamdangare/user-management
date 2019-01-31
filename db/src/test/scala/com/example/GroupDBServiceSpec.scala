@@ -1,3 +1,4 @@
+
 package com.example
 
 import org.scalatest.WordSpec
@@ -28,8 +29,8 @@ class GroupDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
         Group(1, "1212aa"),
         Group(2, "1212ab"),
         Group(3, "1212ac"),
-        Group(4, "1212ad")
-      )
+        Group(4, "1212ad"))
+
       whenReady(groupObj.getGroups) {
         result => assert(result === mockedUserGroupList)
       }

@@ -1,10 +1,10 @@
+
 package com.example
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class UserService(userObj:UserDBService) {
-  //val userObj = new UserDBService
 
   /** def getUserFromGroups(id: Int,
     * listOfUsers: List[User] = userObj.mockedUserList,
@@ -23,7 +23,9 @@ class UserService(userObj:UserDBService) {
     * }
     * }
     */
+
   def getGroupUsers(groupId: Int): Future[List[User]] = Future {
+
     userObj.mockedUserList.filter(_.groupId == groupId)
   }
 }
