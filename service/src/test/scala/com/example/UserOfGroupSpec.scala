@@ -16,17 +16,17 @@ class UserOfGroupSpec extends WordSpec with ScalaFutures with Matchers with Mock
   val user = mock[UserDBService]
 
   when(user.mockedUserList).thenReturn(List(
-    User(1, "asdasd1", "asdasd1", 1, "abc"),
-    User(2, "asdasd2", "asdasd2", 1, "abc"),
-    User(3, "asdasd3", "asdasd3", 4, "pqr"),
-    User(4, "asdasd4", "asdasd4", 2, "pqr")
+    User(1, "asdasd1", "asdasd1", "1", "abc"),
+    User(2, "asdasd2", "asdasd2", "1", "abc"),
+    User(3, "asdasd3", "asdasd3", "4", "pqr"),
+    User(4, "asdasd4", "asdasd4", "2", "pqr")
   ))
 
   val userOfGroup = new UserService(user)
 
   val mockedListOfUsers: Future[List[User]] = Future {
-    List(User(1, "asdasd1", "asdasd1", 1, "abc"),
-      User(2, "asdasd2", "asdasd2", 1, "abc"))
+    List(User(1, "asdasd1", "asdasd1", "1", "abc"),
+      User(2, "asdasd2", "asdasd2", "1", "abc"))
   }
 
   val userObj = new UserService(user)
@@ -37,8 +37,8 @@ class UserOfGroupSpec extends WordSpec with ScalaFutures with Matchers with Mock
   "User Of Group" should {
     "return value for user with same group" in {
 
-      val usersWithSameGroupList: List[User] = List(User(1, "asdasd1", "asdasd1", 1, "abc"),
-        User(2, "asdasd2", "asdasd2", 1, "abc"))
+      val usersWithSameGroupList: List[User] = List(User(1, "asdasd1", "asdasd1", "1", "abc"),
+        User(2, "asdasd2", "asdasd2", "1", "abc"))
 
       whenReady(spyObj.getGroupUsers(1)) {
         result => assert(result == usersWithSameGroupList)
