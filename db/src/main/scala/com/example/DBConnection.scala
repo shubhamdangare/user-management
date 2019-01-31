@@ -9,9 +9,6 @@ class DBConnection {
 
     Class.forName("com.mysql.jdbc.Driver")
     ConnectionPool.singleton("jdbc:mysql://localhost:3306/usermanagement", "root", "l3n60888")
-
-
-
   }
 
 }

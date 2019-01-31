@@ -71,13 +71,12 @@ class UserDBService {
     sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
   }
 
-  def deleteFromUserDB(ids:Int):Long = {
+  def deleteFromUserDB(ids: Int): Long = {
     Db.createConnectiontoDB()
     implicit val session = AutoSession
     sql"delete from User where ids = ${ids}".update.apply()
 
   }
-
 
   def getUser(id: Int): Future[Option[User]] = Future {
     mockedUserList.find(_.ids.equals(id))
@@ -88,8 +87,3 @@ class UserDBService {
   }
 
 }
-
-
-
-
-

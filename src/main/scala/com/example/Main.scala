@@ -14,5 +14,12 @@ object Main extends App {
 
   //db.updatedUserDB(1,"root")
 
-  db.deleteFromUserDB(4)
+ // db.deleteFromUserDB(4)
+
+val group = new GroupDBService
+
+  //group.insert
+ println( group.getGroupFromActualDB(3))
+
+
 }
