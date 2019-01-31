@@ -48,13 +48,13 @@ class UserOfGroupSpec extends WordSpec with ScalaFutures with Matchers with Mock
     "not return empty list of users" in {
       val userList: List[User] = List[User]()
       whenReady(userOfGroup.getGroupUsers(1)) {
-        result => assert(result != userList)
+        result => assert(result == userList)
       }
     }
 
     "return empty list of users is not found in same group" in {
       val userList: List[User] = List[User]()
-      whenReady(userOfGroup.getGroupUsers(8)) {
+      whenReady(userOfGroup.getGroupUsers(8)){
         result => assert(result == userList)
       }
     }

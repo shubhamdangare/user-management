@@ -16,28 +16,26 @@ class UserDBService {
     User(4, "asdasd4", "asdasd4", "2", "pqr"))
 
 
-  def create(ids: Int, name: String, password: String, groupId: String, permission: String): Future[Long] = Future {
+  def insertIntoUsers(ids: Int, name: String, password: String, groupId: String, permission: String): Future[Long] = Future {
 
     implicit val session = AutoSession
     Db.createConnectiontoDB()
     sql"""insert into User values (${ids}, ${name}, ${password},${groupId},${permission})"""
       .updateAndReturnGeneratedKey.apply()
-
   }
 
-  def insertIntoUsers: Future[Future[Long]] = {
+  def insert: Future[Future[Long]] = {
 
-    Future.successful(create(1, "asdasd1", "asdasd1", "1", "abc"))
-    Future.successful(create(2, "asdasd2", "asdasd2", "1", "abc"))
-    Future.successful(create(3, "asdasd3", "asdasd3", "4", "pqr"))
-    Future.successful(create(4, "asdasd4", "asdasd4", "2", "pqr"))
+    Future.successful(insertIntoUsers(1, "asdasd1", "asdasd1", "1", "abc"))
+    Future.successful(insertIntoUsers(2, "asdasd2", "asdasd2", "1", "abc"))
+    Future.successful(insertIntoUsers(3, "asdasd3", "asdasd3", "4", "pqr"))
+    Future.successful(insertIntoUsers(4, "asdasd4", "asdasd4", "2", "pqr"))
   }
 
-
-  def getUserFromActualDB(ids: Int): Option[User] = {
+  def getUserFromActualDB(ids: Int):Future[Option[User]] =Future {
 
     Db.createConnectiontoDB()
-    val name: Option[User] = DB readOnly { implicit session =>
+    val user: Option[User] = DB readOnly { implicit session =>
       sql"select * from User where ids = ${ids}".map(rs => User(rs.int("ids"),
         rs.string("name"),
         rs.string("password"),
@@ -45,14 +43,13 @@ class UserDBService {
         rs.string("permission")))
         .single.apply()
     }
-    name
+    user
   }
 
-
-  def getUsersFromActualDB: Option[List[User]] = {
+  def getUsersFromActualDB:Option[List[User]] ={
 
     Db.createConnectiontoDB()
-    val name: List[User] = DB readOnly { implicit session =>
+    val users: List[User] = DB readOnly { implicit session =>
       sql"select * from User".map(rs => User(rs.int("ids"),
         rs.string("name"),
         rs.string("password"),
@@ -60,11 +57,10 @@ class UserDBService {
         rs.string("permission")))
         .list.apply()
     }
-    Option(name)
+    Option(users)
   }
 
-
-  def updatedUserDB(ids: Int, permission: String): Long = {
+  def updatedUserDB(ids: Int, permission: String): Future[Long] =Future {
 
     Db.createConnectiontoDB()
     implicit val session = AutoSession
@@ -72,10 +68,10 @@ class UserDBService {
   }
 
   def deleteFromUserDB(ids: Int): Long = {
+
     Db.createConnectiontoDB()
     implicit val session = AutoSession
     sql"delete from User where ids = ${ids}".update.apply()
-
   }
 
   def getUser(id: Int): Future[Option[User]] = Future {
@@ -85,5 +81,4 @@ class UserDBService {
   def getUsers: Future[List[User]] = Future {
     mockedUserList
   }
-
 }

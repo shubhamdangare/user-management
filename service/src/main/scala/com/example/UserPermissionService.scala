@@ -4,6 +4,7 @@ package com.example
 import scala.concurrent.Future
 import scala.concurrent._
 import ExecutionContext.Implicits.global
+import scala.util.{Success,Failure}
 
 class UserPermissionService {
   val userObj = new UserDBService
@@ -19,6 +20,14 @@ class UserPermissionService {
     * ListUsers
     * }
     */
+
+
+
+  def getUsersFromPermissionFromActualDB(givenPermission:String):List[User] = {
+
+    userObj.getUsersFromActualDB.get.filter(_.permission.equals(givenPermission))
+  }
+
 
   def getUsersFromPermission(givenPermission: String): Future[List[User]] = Future {
     userObj.mockedUserList.filter(_.permission == givenPermission)

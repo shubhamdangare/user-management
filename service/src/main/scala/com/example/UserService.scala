@@ -24,6 +24,13 @@ class UserService(userObj:UserDBService) {
     * }
     */
 
+
+  def getGroupUsersFromActualDB(groupId:String):List[User] = {
+
+    userObj.getUsersFromActualDB.get.filter(_.groupId.equals(groupId))
+  }
+
+
   def getGroupUsers(groupId: Int): Future[List[User]] = Future {
 
     userObj.mockedUserList.filter(_.groupId == groupId)

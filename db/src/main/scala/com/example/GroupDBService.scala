@@ -6,7 +6,7 @@ import scalikejdbc._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GroupDBService{
+class GroupDBService {
 
   val Db = new DBConnection
 
@@ -16,8 +16,7 @@ class GroupDBService{
     Group(3, "1212ac"),
     Group(4, "1212ad"))
 
-
-  def create(ids: Int, name: String): Future[Long] = Future{
+  def insertIntoDB(ids: Int, name: String): Future[Long] = Future {
 
     implicit val session = AutoSession
     Db.createConnectiontoDB()
@@ -25,14 +24,13 @@ class GroupDBService{
       .updateAndReturnGeneratedKey.apply()
   }
 
-  def insert:Future[Future[Long]] = {
+  def insert: Future[Future[Long]] = {
 
-    Future.successful(create(1,"1234a"))
-    Future.successful(create(2,"1234b"))
-
+    Future.successful(insertIntoDB(1, "1234a"))
+    Future.successful(insertIntoDB(2, "1234b"))
   }
 
-  def getGroupFromActualDB(ids: Int): Option[Group] = {
+  def getGroupFromActualDB(ids: Int):Option[Group] = {
 
     Db.createConnectiontoDB()
     val groupFromDB: Option[Group] = DB readOnly { implicit session =>
@@ -44,12 +42,23 @@ class GroupDBService{
   }
 
 
+  def getGroupsFromActualDB:Future[Option[List[Group]]] = Future{
 
-  def getGroup(id: Int): Future[Option[Group]] = Future {
-
-    mockedUserGroupList.find(_.ids.equals(id))
-
+    Db.createConnectiontoDB()
+    val groupFromDB: List[Group] = DB readOnly { implicit session =>
+      sql"select * from Groups".map(rs => Group(rs.int("id"),
+        rs.string("name")))
+        .list().apply()
+    }
+   Option(groupFromDB)
   }
 
-  def getGroups: Future[List[Group]] = Future { mockedUserGroupList }
+
+  def getGroup(id: Int): Future[Option[Group]] = Future {
+    mockedUserGroupList.find(_.ids.equals(id))
+  }
+
+  def getGroups: Future[List[Group]] = Future {
+    mockedUserGroupList
+  }
 }

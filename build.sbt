@@ -38,8 +38,8 @@ lazy val dependencies = new {
   val scalaMockito = "org.mockito" % "mockito-all" % "1.8.4"
   val mysql = "mysql" % "mysql-connector-java" % "5.1.12"
   val scalike = "org.scalikejdbc" %% "scalikejdbc"       % "3.3.2"
-  val h2Driver = "com.h2database"  %  "h2"                % "1.4.197"
-  val logback = "ch.qos.logback"  %  "logback-classic"   % "1.2.3"
+  //val h2Driver = "com.h2database"  %  "h2"                % "1.4.197"
+  //val logback = "ch.qos.logback"  %  "logback-classic"   % "1.2.3"
 
 }
 
@@ -48,8 +48,8 @@ lazy val dependencies = new {
    dependencies.scalaTest,
    dependencies.scalaMockito,
    dependencies.mysql,
-   dependencies.scalike,
-   dependencies.h2Driver,
-   dependencies.logback
+   dependencies.scalike
+ //  dependencies.h2Driver
+  // dependencies.logback
  )
 

@@ -12,26 +12,24 @@ class UserFromPermissionSpec extends WordSpec with ScalaFutures with Matchers {
   "Permission" should {
     "Return value for user With permission" in {
 
-      val userWithPermissionList: List[User] = List(User(1, "asdasd1", "asdasd1", "1", "abc"),
-        User(2, "asdasd2", "asdasd2", "1", "abc"))
+      val userWithPermissionList: List[User] = List(User(2,"asdasd2","asdasd2","1","abc"))
 
-      whenReady(userPermissionObj.getUsersFromPermission("abc")) {
-        result => assert(result == userWithPermissionList)
-      }
+      val result = userPermissionObj.getUsersFromPermissionFromActualDB("abc")
+      assert(result == userWithPermissionList)
+
     }
 
     "Not Return Empty List of Users" in {
       val userList: List[User] = List[User]()
-      whenReady(userPermissionObj.getUsersFromPermission("abc")) {
-        result => assert(result != userList)
-      }
+      val result = userPermissionObj.getUsersFromPermissionFromActualDB("abc")
+      assert(result != userList)
+
     }
 
     "Return Empty List of Users is not found " in {
       val userList: List[User] = List[User]()
-      whenReady(userPermissionObj.getUsersFromPermission("abcdd")) {
-        result => assert(result == userList)
-      }
+      val result = userPermissionObj.getUsersFromPermissionFromActualDB("abcdd")
+        assert(result == userList)
     }
   }
 }
