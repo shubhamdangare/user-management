@@ -8,6 +8,17 @@ class UserDBService {
 
   val dBConnection = new DBConnection
 
+
+  def addUsers(ids: Int, name: String, password: String, groupId: String, permission: String):Int ={
+
+    implicit val session = AutoSession
+    dBConnection.createConnectiontoDB()
+    sql"""insert into User values (${ids}, ${name}, ${password},${groupId},${permission})"""
+      .update().apply()
+  }
+
+
+
   def getUserFromActualDB(ids: Int): Option[User] = {
     dBConnection.createConnectiontoDB()
     val user: Option[User] = DB readOnly { implicit session =>

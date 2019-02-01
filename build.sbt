@@ -5,8 +5,8 @@ scapegoatVersion in ThisBuild := "1.1.0"
 
 
 lazy val root = (project in file("."))
-  .dependsOn(db, common, service)
-  .aggregate(db, common, service)
+  .dependsOn(db, common, service,restapi)
+  .aggregate(db, common, service,restapi)
   .settings(
     name := "root",
     libraryDependencies ++= commonDependencies
@@ -33,6 +33,14 @@ lazy val db = (project in file("db"))
     libraryDependencies ++= commonDependencies
   )
 
+lazy val restapi = (project in file("restapi"))
+  .aggregate(common,db)
+  .dependsOn(common,db)
+  .settings(
+    name := "restapi",
+    libraryDependencies ++= commonDependencies
+  )
+
 
 lazy val dependencies = new {
 
@@ -42,6 +50,10 @@ lazy val dependencies = new {
   val scalike = "org.scalikejdbc" %% "scalikejdbc"       % "3.3.2"
   //val h2Driver = "com.h2database"  %  "h2"                % "1.4.197"
   //val logback = "ch.qos.logback"  %  "logback-classic"   % "1.2.3"
+  val akkaJson = "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.7"
+  val akkaHttp = "com.typesafe.akka" %% "akka-http"   % "10.1.7"
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.19"
+
 
 }
 
@@ -50,8 +62,11 @@ lazy val dependencies = new {
    dependencies.scalaTest,
    dependencies.scalaMockito,
    dependencies.mysql,
-   dependencies.scalike
+   dependencies.scalike,
  //  dependencies.h2Driver
   // dependencies.logback
+   dependencies.akkaHttp,
+   dependencies.akkaStream,
+   dependencies.akkaJson
  )
 
