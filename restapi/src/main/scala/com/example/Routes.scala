@@ -27,9 +27,8 @@ object Routes extends App {
   val userObj = new UserDBService
 
   val route =
-
     get {
-      path("User" / IntNumber) {
+      path("UserInfo" / IntNumber) {
         id => {
           val user = userObj.getUserFromActualDB(id).get
           complete(s"$user")
@@ -37,25 +36,28 @@ object Routes extends App {
       }
     } ~
       post {
-        path("UserPost") {
+        path("AddUser") {
           {
             entity(as[UserExtractor]) { user =>
-              //userObj.addUsers(ids= user.ids,name = user.name,password = user.password,groupId = user.groupId,permission = user.permission)
               val Done: Int = userObj.addUsers(user.ids, user.name, user.password, user.groupId, user.permission)
-              complete(s"done")
+              complete("Insert")
             }
+          }
+        }
+      } ~
+      delete {
+        path("DeleteUser" / IntNumber){
+          id => {
+            val user:Long = userObj.deleteFromUserDB(id)
+            complete("Deleted")
           }
         }
       }
 
-
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8000)
-
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+  println(s"Server online at http://localhost:8000/\nPress RETURN to stop...")
   StdIn.readLine() // let it run until user presses return
   bindingFuture
     .flatMap(_.unbind()) // trigger unbinding from the port
     .onComplete(_ => system.terminate()) // and shutdown when done
-
-
 }
