@@ -2,72 +2,64 @@
 package com.example
 
 import akka.actor.ActorSystem
-import akka.http.javadsl.server.Route
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
+import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import spray.json.DefaultJsonProtocol._
-import akka.http.scaladsl.server.Directives
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.server.RouteResult.Complete
-import spray.json._
-import scala.concurrent.Future
+import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
+
 import scala.io.StdIn
 
- // case class Users(ids:Int ,name:String, password:String, groupId:String, permission:String )
 
-
-object Routes extends App {
+object Routes extends App with PlayJsonSupport {
 
   implicit val system = ActorSystem("my-system")
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  implicit val appFormat = jsonFormat4(UserExtractor)
- // implicit val appFormat1 = jsonFormat5(Users)
 
-  val userObj = new UserDBService
-  val groupObj = new GroupDBService
+  val userDBService = new UserDBService
+  val groupDBService = new GroupDBService
 
   val route =
     get {
       path("user-info" / IntNumber) {
         id => {
-          val user = userObj.getUserFromActualDB(id).get
-          complete(s"$user")
+          val user = userDBService.getUserFromActualDB(id).get
+          complete(UserResponse(user.ids, user.name, user.password, user.groupId, user.permission))
         }
       } ~
         path("users-info") {
-          val users = userObj.getUsersFromActualDB.get
-          complete(s"$users")
+          val usersList = userDBService.getUsersFromActualDB.get
+          val userResponseList: List[UserResponse] = UserResponse.toDomain(usersList)
+          complete(UsersList(userResponseList))
         } ~
         path("group-info" / IntNumber) {
           id => {
-            val group = groupObj.getGroupFromActualDB(id).get
+            val group = groupDBService.getGroupFromActualDB(id).get
             complete(s"$group")
           }
         } ~
         path("groups-info") {
-          val groups = groupObj.getGroupsFromActualDB.get
+          val groups = groupDBService.getGroupsFromActualDB.get
           complete(s"$groups")
         }
     } ~
-      post {
-        path("add-user") {
-          {
-            entity(as[UserExtractor]) { user =>
-              val doneAdding: Long = userObj.addUsers(user.name, user.password, user.groupId, user.permission)
-              complete(s"Insert $doneAdding")
-            }
-          }
+      path("add-user") {
+        (post & entity(as[UserRequest])) { userRequest =>
+          val userId = userDBService.addUsers(
+            userRequest.name,
+            userRequest.password,
+            userRequest.groupId,
+            userRequest.permission
+          )
+          complete(IdResponse(userId))
         }
       } ~
       delete {
         path("delete-user" / IntNumber) {
           id => {
-            val user: Long = userObj.deleteFromUserDB(id)
+            val user: Long = userDBService.deleteFromUserDB(id)
             complete("Deleted")
           }
         }
@@ -75,7 +67,7 @@ object Routes extends App {
       put {
         path("UpdateUser") {
           parameters('id.as[Int], 'value.as[String]) { (id, value) => {
-            val checkUpdate: Long = userObj.updatedUserDB(id, value)
+            val checkUpdate: Long = userDBService.updatedUserDB(id, value)
             complete("Done Updating")
           }
           }

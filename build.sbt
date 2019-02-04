@@ -48,12 +48,11 @@ lazy val dependencies = new {
   val scalaMockito = "org.mockito" % "mockito-all" % "1.8.4"
   val mysql = "mysql" % "mysql-connector-java" % "5.1.12"
   val scalike = "org.scalikejdbc" %% "scalikejdbc"       % "3.3.2"
-  //val h2Driver = "com.h2database"  %  "h2"                % "1.4.197"
-  //val logback = "ch.qos.logback"  %  "logback-classic"   % "1.2.3"
   val akkaJson = "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.7"
   val akkaHttp = "com.typesafe.akka" %% "akka-http"   % "10.1.7"
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.5.19"
-
+  val playJson   = "com.typesafe.play" %% "play-json" % "2.7.1"
+  val akkaHttpPlayJson= "de.heikoseeberger" %% "akka-http-play-json"   % "1.20.0"
 
 }
 
@@ -63,10 +62,10 @@ lazy val dependencies = new {
    dependencies.scalaMockito,
    dependencies.mysql,
    dependencies.scalike,
- //  dependencies.h2Driver
-  // dependencies.logback
    dependencies.akkaHttp,
    dependencies.akkaStream,
-   dependencies.akkaJson
+   dependencies.playJson,
+   dependencies.akkaJson,
+   dependencies.akkaHttpPlayJson
  )
 

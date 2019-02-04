@@ -9,14 +9,16 @@ class UserDBService {
 
   val dBConnection = new DBConnection
 
-  def addUsers(name: String, password: String, groupId: String, permission: String): Long = {
+  def addUsers(name: String, password: String, groupId: String, permission: String): String = {
 
     implicit val session = AutoSession
     dBConnection.createConnectiontoDB()
 
+    val userId = UUID.randomUUID().toString
     withSQL {
-      insert.into(User).values(UUID.randomUUID().toString() , name, password, groupId, permission)
+      insert.into(User).values(userId , name, password, groupId, permission)
     }.update().apply()
+    userId
   }
 
   def getUserFromActualDB(ids: Int): Option[User] = {
