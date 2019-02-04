@@ -3,57 +3,62 @@ package com.example
 
 import scalikejdbc._
 
+import java.util.UUID
 
 class UserDBService {
 
   val dBConnection = new DBConnection
 
-
-  def addUsers(ids: Int, name: String, password: String, groupId: String, permission: String):Int ={
+  def addUsers(name: String, password: String, groupId: String, permission: String): Long = {
 
     implicit val session = AutoSession
     dBConnection.createConnectiontoDB()
-    sql"""insert into User values (${ids}, ${name}, ${password},${groupId},${permission})"""
-      .update().apply()
+
+    withSQL {
+      insert.into(User).values(UUID.randomUUID().toString() , name, password, groupId, permission)
+    }.update().apply()
   }
-
-
 
   def getUserFromActualDB(ids: Int): Option[User] = {
     dBConnection.createConnectiontoDB()
-    val user: Option[User] = DB readOnly { implicit session =>
-      sql"select * from User where ids = ${ids}".map(rs => User(rs.int("ids"),
-        rs.string("name"),
-        rs.string("password"),
-        rs.string("groupId"),
-        rs.string("permission")))
-        .single.apply()
-    }
-    user
+    implicit val session = AutoSession
+    val m = User.syntax("m")
+
+    withSQL {
+      select.from(User as m).where.eq(m.ids, ids)
+    }.map(User(m.resultName)).single().apply()
   }
 
   def getUsersFromActualDB: Option[List[User]] = {
     dBConnection.createConnectiontoDB()
-    val users: List[User] = DB readOnly { implicit session =>
-      sql"select * from User".map(rs => User(rs.int("ids"),
-        rs.string("name"),
-        rs.string("password"),
-        rs.string("groupId"),
-        rs.string("permission")))
-        .list.apply()
-    }
-    Option(users)
+    implicit val session = AutoSession
+    val m = User.syntax("m")
+
+    Option(withSQL {
+      select.from(User as m)
+    }.map(User(m.resultName)).list().apply())
   }
 
   def updatedUserDB(ids: Int, permission: String): Long = {
     dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
-    sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
+    val m = User.syntax("m")
+    withSQL {
+      update(User).set(
+        User.column.permission -> permission
+      ).where.eq(User.column.ids, ids)
+    }.update.apply()
+    //  sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
   }
 
   def deleteFromUserDB(ids: Int): Long = {
     dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
-    sql"delete from User where ids = ${ids}".update.apply()
+    val m = User.syntax("m")
+
+    withSQL {
+      delete.from(User).where.eq(m.ids, ids)
+    }.update.apply()
+    // sql"delete from User where ids = ${ids}".update.apply()
   }
 }

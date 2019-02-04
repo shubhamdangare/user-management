@@ -16,6 +16,8 @@ import spray.json._
 import scala.concurrent.Future
 import scala.io.StdIn
 
+ // case class Users(ids:Int ,name:String, password:String, groupId:String, permission:String )
+
 
 object Routes extends App {
 
@@ -23,33 +25,59 @@ object Routes extends App {
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  implicit val appFormat = jsonFormat5(UserExtractor)
+  implicit val appFormat = jsonFormat4(UserExtractor)
+ // implicit val appFormat1 = jsonFormat5(Users)
+
   val userObj = new UserDBService
+  val groupObj = new GroupDBService
 
   val route =
     get {
-      path("UserInfo" / IntNumber) {
+      path("user-info" / IntNumber) {
         id => {
           val user = userObj.getUserFromActualDB(id).get
           complete(s"$user")
         }
-      }
+      } ~
+        path("users-info") {
+          val users = userObj.getUsersFromActualDB.get
+          complete(s"$users")
+        } ~
+        path("group-info" / IntNumber) {
+          id => {
+            val group = groupObj.getGroupFromActualDB(id).get
+            complete(s"$group")
+          }
+        } ~
+        path("groups-info") {
+          val groups = groupObj.getGroupsFromActualDB.get
+          complete(s"$groups")
+        }
     } ~
       post {
-        path("AddUser") {
+        path("add-user") {
           {
             entity(as[UserExtractor]) { user =>
-              val Done: Int = userObj.addUsers(user.ids, user.name, user.password, user.groupId, user.permission)
-              complete("Insert")
+              val doneAdding: Long = userObj.addUsers(user.name, user.password, user.groupId, user.permission)
+              complete(s"Insert $doneAdding")
             }
           }
         }
       } ~
       delete {
-        path("DeleteUser" / IntNumber){
+        path("delete-user" / IntNumber) {
           id => {
-            val user:Long = userObj.deleteFromUserDB(id)
+            val user: Long = userObj.deleteFromUserDB(id)
             complete("Deleted")
+          }
+        }
+      } ~
+      put {
+        path("UpdateUser") {
+          parameters('id.as[Int], 'value.as[String]) { (id, value) => {
+            val checkUpdate: Long = userObj.updatedUserDB(id, value)
+            complete("Done Updating")
+          }
           }
         }
       }

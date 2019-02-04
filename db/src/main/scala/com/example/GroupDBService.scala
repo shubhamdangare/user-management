@@ -8,6 +8,7 @@ class GroupDBService {
 
   val dBConnection = new DBConnection
 
+
   def getGroupFromActualDB(ids: Int):Option[Group] = {
     dBConnection.createConnectiontoDB()
     val groupFromDB: Option[Group] = DB readOnly { implicit session =>
@@ -27,4 +28,5 @@ class GroupDBService {
     }
    Option(groupFromDB)
   }
+
 }
