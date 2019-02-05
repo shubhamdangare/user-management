@@ -3,20 +3,17 @@ package com.example
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshalling.Marshal
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 
 import scala.io.StdIn
 
-
 object Routes extends App with PlayJsonSupport {
 
   implicit val system = ActorSystem("my-system")
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
-
 
   val userDBService = new UserDBService
   val groupDBService = new GroupDBService
@@ -37,12 +34,13 @@ object Routes extends App with PlayJsonSupport {
         path("group-info" / IntNumber) {
           id => {
             val group = groupDBService.getGroupFromActualDB(id).get
-            complete(s"$group")
+            complete(GroupResponse(group.id, group.name))
           }
         } ~
         path("groups-info") {
-          val groups = groupDBService.getGroupsFromActualDB.get
-          complete(s"$groups")
+          val groupsList = groupDBService.getGroupsFromActualDB.get
+          val groupResponseList: List[GroupResponse] = GroupResponse.toDomain(groupsList)
+          complete(GroupsList(groupResponseList))
         }
     } ~
       path("add-user") {
