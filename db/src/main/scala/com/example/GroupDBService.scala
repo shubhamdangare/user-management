@@ -9,24 +9,24 @@ class GroupDBService {
   val dBConnection = new DBConnection
 
 
-  def getGroupFromActualDB(ids: Int):Option[Group] = {
+  def getGroupFromActualDB(ids: Int): Option[Group] = {
     dBConnection.createConnectiontoDB()
-    val groupFromDB: Option[Group] = DB readOnly { implicit session =>
-      sql"select * from Groups where id = ${ids}".map(rs => Group(rs.int("id"),
-        rs.string("name")))
-        .single.apply()
-    }
-    groupFromDB
+    implicit val session = AutoSession
+    val m = Group.syntax("m")
+
+    withSQL {
+      select.from(Group as m).where.eq(m.id, ids)
+    }.map(Group(m.resultName)).single().apply()
   }
 
-  def getGroupsFromActualDB:Option[List[Group]] = {
+  def getGroupsFromActualDB: Option[List[Group]] = {
     dBConnection.createConnectiontoDB()
-    val groupFromDB: List[Group] = DB readOnly { implicit session =>
-      sql"select * from Groups".map(rs => Group(rs.int("id"),
-        rs.string("name")))
-        .list().apply()
-    }
-   Option(groupFromDB)
+    implicit val session = AutoSession
+    val m = Group.syntax("m")
+
+    Option(withSQL {
+      select.from(Group as m)
+    }.map(Group(m.resultName)).list().apply())
   }
 
 }

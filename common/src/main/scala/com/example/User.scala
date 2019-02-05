@@ -24,3 +24,4 @@ object User extends SQLSyntaxSupport[User] {
       groupId = rs.string(e.groupId), permission = rs.string(e.permission))
 
 }
+
