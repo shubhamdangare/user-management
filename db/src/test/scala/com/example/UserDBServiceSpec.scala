@@ -15,7 +15,7 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
     "Return value for getUser" in {
 
       val result = userObj.getUserFromActualDB(1)
-         assert(result.get == User(1, "asdasd1", "asdasd1", "1", "root"))
+         assert(result.get == User("1", "asdasd1", "asdasd1", "1", "root"))
     }
 
     "Not Return Empty List of Users" in {
@@ -27,9 +27,9 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
 
     "Return List of Users" in {
       val mockedUserList: List[User] = List(
-        User(1, "asdasd1", "asdasd1", "1", "root"),
-        User(3, "asdasd3", "asdasd3", "4", "Super"),
-        User(2, "asdasd2", "asdasd2", "1", "abc"))
+        User("1", "asdasd1", "asdasd1", "1", "root"),
+        User("3", "asdasd3", "asdasd3", "4", "Super"),
+        User("2", "asdasd2", "asdasd2", "1", "abc"))
 
       val result = userObj.getUsersFromActualDB
       assert(result.get === mockedUserList)

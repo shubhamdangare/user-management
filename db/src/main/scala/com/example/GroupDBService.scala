@@ -29,4 +29,27 @@ class GroupDBService {
     }.map(Group(m.resultName)).list().apply())
   }
 
+  def deleteFromGroupDB(ids: Int): Long = {
+    dBConnection.createConnectiontoDB()
+    implicit val session = AutoSession
+    val m = Group.syntax("m")
+
+    withSQL {
+      delete.from(Group).where.eq(m.id, ids)
+    }.update.apply()
+    // sql"delete from User where ids = ${ids}".update.apply()
+  }
+
+  def updatedGroupDB(ids: Int, name: String): Long = {
+    dBConnection.createConnectiontoDB()
+    implicit val session = AutoSession
+    val m = Group.syntax("m")
+    withSQL {
+      update(Group).set(
+        Group.column.name -> name
+      ).where.eq(Group.column.id, ids)
+    }.update.apply()
+    //  sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
+  }
+
 }

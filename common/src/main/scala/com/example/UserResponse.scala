@@ -3,7 +3,7 @@ package com.example
 
 import play.api.libs.json.{Json, OWrites}
 
-case class UserResponse(ids: Int, name: String, password: String, groupId: String, permission: String)
+case class UserResponse(ids: String, name: String, password: String, groupId: String, permission: String)
 
 object UserResponse {
 

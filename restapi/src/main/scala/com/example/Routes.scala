@@ -1,10 +1,13 @@
 
 package com.example
 
+import java.util.UUID
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
+import com.exapmle.Producer
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport
 
 import scala.io.StdIn
@@ -51,6 +54,7 @@ object Routes extends App with PlayJsonSupport {
             userRequest.groupId,
             userRequest.permission
           )
+          val producer = new Producer(userRequest,userId)
           complete(IdResponse(userId))
         }
       } ~
@@ -60,6 +64,12 @@ object Routes extends App with PlayJsonSupport {
             val user: Long = userDBService.deleteFromUserDB(id)
             complete("Deleted")
           }
+        }~
+        path("delete-group" / IntNumber) {
+          id => {
+            val user: Long = groupDBService.deleteFromGroupDB(id)
+            complete(s"Deleted $user")
+          }
         }
       } ~
       put {
@@ -67,7 +77,14 @@ object Routes extends App with PlayJsonSupport {
           parameters('id.as[Int], 'value.as[String]) { (id, value) => {
             val checkUpdate: Long = userDBService.updatedUserDB(id, value)
             complete("Done Updating")
+            }
           }
+        }~
+        path("updategroup") {
+          parameters('id.as[Int], 'value.as[String]) { (id, value) => {
+            val checkUpdate: Long = userDBService.updatedUserDB(id, value)
+            complete("Done Updating")
+            }
           }
         }
       }

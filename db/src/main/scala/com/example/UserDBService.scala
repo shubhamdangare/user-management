@@ -14,7 +14,7 @@ class UserDBService {
     implicit val session = AutoSession
     dBConnection.createConnectiontoDB()
 
-    val userId = UUID.randomUUID().toString
+     val userId = UUID.randomUUID().toString
     withSQL {
       insert.into(User).values(userId , name, password, groupId, permission)
     }.update().apply()

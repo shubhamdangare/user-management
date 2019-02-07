@@ -16,8 +16,8 @@ class UserOfGroupSpec extends WordSpec with ScalaFutures with Matchers with Mock
   val user = mock[UserDBService]
   val userOfGroup = new UserService(user)
   val mockedListOfUsers: Option[List[User]] = {
-    Option(List(User(1, "asdasd1", "asdasd1", "1", "root"),
-      User(2, "asdasd2", "asdasd2", "1", "abc")))
+    Option(List(User("1", "asdasd1", "asdasd1", "1", "root"),
+      User("2", "asdasd2", "asdasd2", "1", "abc")))
   }
   val userObj = new UserService(user)
   val spyObj = Mockito.spy(userObj)
@@ -27,8 +27,8 @@ class UserOfGroupSpec extends WordSpec with ScalaFutures with Matchers with Mock
   "User Of Group" should {
     "return value for user with same group" in {
 
-      val usersWithSameGroupList: List[User] = List(User(1, "asdasd1", "asdasd1", "1", "root"),
-        User(2, "asdasd2", "asdasd2", "1", "abc"))
+      val usersWithSameGroupList: List[User] = List(User("1", "asdasd1", "asdasd1", "1", "root"),
+        User("2", "asdasd2", "asdasd2", "1", "abc"))
 
       val result = spyObj.getGroupUsersFromActualDB("1")
       assert(result.get == usersWithSameGroupList)

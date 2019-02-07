@@ -12,7 +12,7 @@ class UserFromPermissionSpec extends WordSpec with ScalaFutures with Matchers {
   "Permission" should {
     "Return value for user With permission" in {
 
-      val userWithPermissionList: List[User] = List(User(2, "asdasd2", "asdasd2", "1", "abc"))
+      val userWithPermissionList: List[User] = List(User("2", "asdasd2", "asdasd2", "1", "abc"))
 
       val result = userPermissionObj.getUsersFromPermissionFromActualDB("abc")
       assert(result == userWithPermissionList)
