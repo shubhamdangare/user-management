@@ -25,8 +25,8 @@ object Routes extends App with PlayJsonSupport {
         parameters('value.as[String]) { (value) => {
           val user = userDBService.getUserFromActualDB(value).get
           complete(UserResponse(user.ids, user.name, user.password, user.groupId, user.permission))
-           }
-        }
+             }
+          }
       } ~
         path("users-info") {
           val usersList = userDBService.getUsersFromActualDB.get
@@ -92,8 +92,8 @@ object Routes extends App with PlayJsonSupport {
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8000)
   println(s"Server online at http://localhost:8000/\nPress RETURN to stop...")
   val message = new  GroupStartUpService
-  StdIn.readLine() // let it run until user presses return
+  StdIn.readLine()
   bindingFuture
-    .flatMap(_.unbind()) // trigger unbinding from the port
-    .onComplete(_ => system.terminate()) // and shutdown when done
+    .flatMap(_.unbind())
+    .onComplete(_ => system.terminate())
 }
