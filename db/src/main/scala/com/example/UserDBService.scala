@@ -41,25 +41,25 @@ class UserDBService {
     }.map(User(m.resultName)).list().apply())
   }
 
-  def updatedUserDB(ids: Int, permission: String): Long = {
+  def updatedUserDB(name: String, permission: String): Long = {
     dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
     val m = User.syntax("m")
     withSQL {
       update(User).set(
         User.column.permission -> permission
-      ).where.eq(User.column.ids, ids)
+      ).where.eq(User.column.name, name)
     }.update.apply()
     //  sql"update User set permission = ${permission} where ids = ${ids}".update.apply()
   }
 
-  def deleteFromUserDB(ids: Int): Long = {
+  def deleteFromUserDB(name: String): Long = {
     dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
     val m = User.syntax("m")
 
     withSQL {
-      delete.from(User).where.eq(m.ids, ids)
+      delete.from(User).where.eq(User.column.name, name)
     }.update.apply()
     // sql"delete from User where ids = ${ids}".update.apply()
   }

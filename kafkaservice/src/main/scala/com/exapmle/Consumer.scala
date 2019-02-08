@@ -11,9 +11,9 @@ import com.example.User
 import scala.collection.JavaConverters._
 
 class Consumer {
-
+  println("hi from consumer")
   val props = new Properties()
-  props.put("bootstrap.servers", "localhost:9099")
+  props.put("bootstrap.servers", "localhost:9092")
   props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
   props.put("value.deserializer", classOf[CustomDeserializer])
   // import java.util.UUID
@@ -32,6 +32,8 @@ class Consumer {
     * }
     */
 
-  val record = consumer.poll(1000).asScala.toList.map(_.value())
+  val record = consumer.poll(100000).asScala.toList.map(_.value())
   record
+  println("consumer completed")
+  consumer.close()
 }

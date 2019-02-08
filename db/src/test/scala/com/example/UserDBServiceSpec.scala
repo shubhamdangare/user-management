@@ -21,7 +21,7 @@ class UserDBServiceSpec extends WordSpec with ScalaFutures with Matchers {
     "Not Return Empty List of Users" in {
       val userList: List[User] = List[User]()
       val result = userObj.getUsersFromActualDB
-      assert(result != userList)
+      assert(result.get != userList)
 
     }
 

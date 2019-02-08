@@ -6,9 +6,8 @@ import com.example.{User, UserRequest}
 import org.apache.kafka.clients.producer._
 
 class Producer(user:UserRequest,id:String) {
-
     val props = new Properties()
-    props.put("bootstrap.servers", "localhost:9099")
+    props.put("bootstrap.servers", "localhost:9092")
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     props.put("value.serializer", classOf[CustomSerializer])
     val producer = new KafkaProducer[String, User](props)
@@ -19,10 +18,9 @@ class Producer(user:UserRequest,id:String) {
       *producer.send(record)
       * }
       */
-    val record = new ProducerRecord[String, User]("user-add", user.groupId, userObject)
+    val record = new ProducerRecord[String, User]("user-add",  s"$user.groupId", userObject)
     producer.send(record)
     producer.close()
-
 }
 
 

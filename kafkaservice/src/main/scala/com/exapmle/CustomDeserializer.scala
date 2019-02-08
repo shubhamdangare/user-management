@@ -18,7 +18,7 @@ class CustomDeserializer extends Deserializer[User] {
     try {
       val mapper = new ObjectMapper
       mapper.registerModule(DefaultScalaModule)
-      //      print(bytes,toString)
+      print(bytes.toString)
       mapper.readValue(bytes, classOf[User])
     }
     catch {

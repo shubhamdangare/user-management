@@ -20,7 +20,6 @@ object Routes extends App with PlayJsonSupport {
 
   val userDBService = new UserDBService
   val groupDBService = new GroupDBService
-  val message = new  GroupStartUpService
 
   val route =
     get {
@@ -60,10 +59,11 @@ object Routes extends App with PlayJsonSupport {
         }
       } ~
       delete {
-        path("delete-user" / IntNumber) {
-          id => {
-            val user: Long = userDBService.deleteFromUserDB(id)
-            complete("Deleted")
+        path("delete-user") {
+          parameters('value.as[String]) { (value) => {
+              val user: Long = userDBService.deleteFromUserDB(value)
+              complete("Deleted")
+            }
           }
         }~
         path("delete-group" / IntNumber) {
@@ -75,15 +75,15 @@ object Routes extends App with PlayJsonSupport {
       } ~
       put {
         path("UpdateUser") {
-          parameters('id.as[Int], 'value.as[String]) { (id, value) => {
-            val checkUpdate: Long = userDBService.updatedUserDB(id, value)
+          parameters('name.as[String],'value.as[String]) { (name, value) => {
+            val checkUpdate: Long = userDBService.updatedUserDB(name, value)
             complete("Done Updating")
             }
           }
         }~
         path("updategroup") {
           parameters('id.as[Int], 'value.as[String]) { (id, value) => {
-            val checkUpdate: Long = userDBService.updatedUserDB(id, value)
+            val checkUpdate: Long = groupDBService.updatedGroupDB(id, value)
             complete("Done Updating")
             }
           }
@@ -92,6 +92,7 @@ object Routes extends App with PlayJsonSupport {
 
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8000)
   println(s"Server online at http://localhost:8000/\nPress RETURN to stop...")
+  val message = new  GroupStartUpService
   StdIn.readLine() // let it run until user presses return
   bindingFuture
     .flatMap(_.unbind()) // trigger unbinding from the port
