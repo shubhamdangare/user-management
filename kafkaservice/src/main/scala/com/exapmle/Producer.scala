@@ -13,15 +13,13 @@ class Producer(user:UserRequest,id:String) {
     props.put("value.serializer", classOf[CustomSerializer])
     val producer = new KafkaProducer[String, User](props)
     val userObject = User(id, user.name,user.password,user.groupId,user.permission)
-    //val users = "user"
-    //val message = "message"
     /**
       * for (i <- 1 to 5) {
       * val record = new ProducerRecord[String, User](topic, s"i", User(i, s"$user + $i", s"$message + $i"))
       *producer.send(record)
       * }
       */
-    val record = new ProducerRecord[String, User]("user-add", "User2", userObject)
+    val record = new ProducerRecord[String, User]("user-add", user.groupId, userObject)
     producer.send(record)
     producer.close()
 

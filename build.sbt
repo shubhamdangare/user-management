@@ -3,7 +3,6 @@ organization in ThisBuild := "com.example"
 scalaVersion in ThisBuild := "2.11.7"
 scapegoatVersion in ThisBuild := "1.1.0"
 
-
 lazy val root = (project in file("."))
   .dependsOn(db, common, service,restapi,kafkaservice)
   .aggregate(db, common, service,restapi,kafkaservice)
@@ -30,7 +29,7 @@ lazy val db = (project in file("db"))
   .dependsOn(common,kafkaservice)
   .settings(
     name := "DB",
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= commonDependencies ++ Seq("com.google.inject" % "guice" % "4.2.2")
   )
 
 lazy val restapi = (project in file("restapi"))

@@ -20,6 +20,7 @@ object Routes extends App with PlayJsonSupport {
 
   val userDBService = new UserDBService
   val groupDBService = new GroupDBService
+  val message = new  GroupStartUpService
 
   val route =
     get {
