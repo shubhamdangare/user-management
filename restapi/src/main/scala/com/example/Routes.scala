@@ -1,8 +1,6 @@
 
 package com.example
 
-import java.util.UUID
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
@@ -54,7 +52,7 @@ object Routes extends App with PlayJsonSupport {
             userRequest.groupId,
             userRequest.permission
           )
-          val producer = new Producer(userRequest,userId)
+          new Producer(userRequest,userId)
           complete(IdResponse(userId))
         }
       } ~

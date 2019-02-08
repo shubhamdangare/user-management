@@ -3,8 +3,7 @@ package com.example
 
 import scalikejdbc._
 
-
-case class User(ids:String, name: String, password: String, groupId: String, permission: String)
+case class User(ids: String, name: String, password: String, groupId: String, permission: String)
 
 object User extends SQLSyntaxSupport[User] {
   override val tableName = "User"

@@ -3,7 +3,6 @@ package com.example
 
 import scalikejdbc._
 
-
 case class Group(id: Int, name: String)
 
 object Group extends SQLSyntaxSupport[Group] {
