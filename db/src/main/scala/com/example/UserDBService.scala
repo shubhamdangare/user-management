@@ -19,7 +19,7 @@ class UserDBService {
     userId
   }
 
-  def getUserFromActualDB(ids: Int): Option[User] = {
+  def getUserFromActualDB(ids: String): Option[User] = {
     dBConnection.createConnectiontoDB()
     implicit val session = AutoSession
     val userTable = User.syntax("m")

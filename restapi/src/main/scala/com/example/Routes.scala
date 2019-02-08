@@ -21,10 +21,11 @@ object Routes extends App with PlayJsonSupport {
 
   val route =
     get {
-      path("user-info" / IntNumber) {
-        id => {
-          val user = userDBService.getUserFromActualDB(id).get
+      path("user-info") {
+        parameters('value.as[String]) { (value) => {
+          val user = userDBService.getUserFromActualDB(value).get
           complete(UserResponse(user.ids, user.name, user.password, user.groupId, user.permission))
+           }
         }
       } ~
         path("users-info") {

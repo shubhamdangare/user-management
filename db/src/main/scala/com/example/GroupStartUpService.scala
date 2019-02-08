@@ -1,11 +1,12 @@
 package com.example
 
 import com.exapmle.Consumer
+import com.typesafe.scalalogging.LazyLogging
 import javax.inject.Singleton
 
 @Singleton
-class GroupStartUpService {
+class GroupStartUpService extends LazyLogging{
   val consumerService = new Consumer
-  println("inside GroupStartUpService ")
-  println(consumerService.record)
+  logger.info("inside GroupStartUpService ")
+  logger.info(s"${consumerService.record}")
 }
