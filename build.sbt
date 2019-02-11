@@ -54,7 +54,9 @@ lazy val kafkaservice = (project in file("kafkaservice"))
       "com.typesafe.play" %% "play-json" % "2.7.1",
       "de.heikoseeberger" %% "akka-http-play-json" % "1.20.0",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.8",
-      "net.manub" %% "scalatest-embedded-kafka" % "0.14.0" % "test"
+      "net.manub" %% "scalatest-embedded-kafka" % "0.14.0" % "test",
+      "log4j" % "log4j" % "1.2.17",
+      "org.slf4j" % "slf4j-simple" % "1.7.25"
     )
   )
 
